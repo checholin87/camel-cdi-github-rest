@@ -1,0 +1,1 @@
+camel-cdi-github-rest
