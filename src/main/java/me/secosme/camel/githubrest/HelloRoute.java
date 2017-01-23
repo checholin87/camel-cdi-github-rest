@@ -3,24 +3,16 @@ package me.secosme.camel.githubrest;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.cdi.ContextName;
 
-@ContextName("hello")
+@ContextName("github")
 public class HelloRoute extends RouteBuilder {
 
     @Override
     public void configure() {
+
         /**
-         * http://localhost:8080/github-rest/camel/say/hello/
-         * http://localhost:8080/github-rest/camel/say/hello/checholin87
+         * http://localhost:8080/camel-cdi-github-rest/camel/say?name=checholin87
          */
-        rest("/say/")
-            .produces("text/plain")
-            .get("hello")
-            .route()
-            .transform().constant("Hello World!")
-            .endRest()
-            .get("hello/{name}")
-            .route()
-            .bean("hello")
-            .log("${body}");
+
+        from("servlet:///say?servletName=CamelServlet&matchOnUriPrefix=true&httpMethodRestrict=GET").beanRef("hello").log("${body}");
     }
 }

@@ -10,13 +10,11 @@ public class GitHubRestRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         /**
-         * 200 => http://localhost:8080/github-rest/camel/github/repositories/checholin87
-         * 404 => http://localhost:8080/github-rest/camel/github/repositories/fjwlfjwklejel
+         * 200 => http://localhost:8080/camel-cdi-github-rest/camel/github?user=checholin87
+         * 404 => http://localhost:8080/camel-cdi-github-rest/camel/github?user=fjwlfjwklejel
          */
-        rest("/github/")
-            .produces("application/json")
-            .get("repositories/{user}")
-            .route()
+
+        from("servlet:///github?servletName=CamelServlet&matchOnUriPrefix=true&httpMethodRestrict=GET")
             .log("${header.user}")
             .setHeader(Exchange.HTTP_PATH, simple("/users/${header.user}/repos"))
             .to("https://api.github.com?throwExceptionOnFailure=false&bridgeEndpoint=true");
